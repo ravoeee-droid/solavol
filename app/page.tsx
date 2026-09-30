@@ -1,12 +1,11 @@
 import {kpis,leads,tasks} from '../lib/mock';
-
-const nav=['Übersicht','Leads','Kampagnen','Website','Content','Aufgaben','Reports'];
+import Nav from '../components/Nav';
 
 export default function Home(){
   return <main className="shell">
     <aside className="sidebar">
       <div className="brand"><div className="mark">S</div><div><strong>SOLAVOL</strong><span>Growth Cockpit</span></div></div>
-      <nav>{nav.map((n,i)=><button className={i===0?'active':''} key={n}><span>{['⌂','◎','↗','◫','◉','✓','▥'][i]}</span>{n}</button>)}</nav>
+      <Nav />
       <div className="sidecard"><small>DIGITALE GEWINNER</small><b>Betreuung aktiv</b><p>Website · Meta Ads · Optimierung</p><div className="pulse">● Alles läuft</div></div>
       <div className="profile"><div className="avatar">SO</div><div><b>SOLAVOL Team</b><span>Kundenkonto</span></div><button>⋯</button></div>
     </aside>
@@ -25,8 +24,8 @@ export default function Home(){
       </section>
 
       <section className="grid two lower">
-        <article className="panel"><div className="panelHead"><div><span>LEAD-CENTER</span><h3>Neueste Interessenten</h3></div><button>Alle Leads →</button></div><div className="leadTable">{leads.map(l=><div className="lead" key={l.name}><div className="person"><i>{l.name.split(' ').map(x=>x[0]).join('')}</i><div><b>{l.name}</b><span>{l.city} · {l.source}</span></div></div><span className={'status '+l.status.toLowerCase()}>{l.status}</span><b>{l.value}</b></div>)}</div></article>
-        <article className="panel"><div className="panelHead"><div><span>NÄCHSTE SCHRITTE</span><h3>Offene Aufgaben</h3></div><button>Alle Aufgaben →</button></div><div className="taskList">{tasks.map((t,i)=><div className="task" key={i}><button className="check">✓</button><div><b>{t.task}</b><span><em>{t.owner}</em> · {t.due}</span></div></div>)}</div><div className="insight"><span>✦ KI-INSIGHT</span><b>Creative „Eigenheim + Stromkosten“ erzeugt aktuell 38 % günstigere Leads.</b><p>Empfehlung: Budget von Creative C auf B verschieben.</p><button>Empfehlung ansehen →</button></div></article>
+        <article className="panel"><div className="panelHead"><div><span>LEAD-CENTER</span><h3>Neueste Interessenten</h3></div><a className="panelLink" href="/leads">Alle Leads →</a></div><div className="leadTable">{leads.map(l=><div className="lead" key={l.name}><div className="person"><i>{l.name.split(' ').map(x=>x[0]).join('')}</i><div><b>{l.name}</b><span>{l.city} · {l.source}</span></div></div><span className={'status '+l.status.toLowerCase()}>{l.status}</span><b>{l.value}</b></div>)}</div></article>
+        <article className="panel"><div className="panelHead"><div><span>NÄCHSTE SCHRITTE</span><h3>Offene Aufgaben</h3></div><a className="panelLink" href="/aufgaben">Alle Aufgaben →</a></div><div className="taskList">{tasks.map((t,i)=><div className="task" key={i}><button className="check">✓</button><div><b>{t.task}</b><span><em>{t.owner}</em> · {t.due}</span></div></div>)}</div><div className="insight"><span>✦ KI-INSIGHT</span><b>Creative „Eigenheim + Stromkosten“ erzeugt aktuell 38 % günstigere Leads.</b><p>Empfehlung: Budget von Creative C auf B verschieben.</p><button>Empfehlung ansehen →</button></div></article>
       </section>
     </section>
   </main>
