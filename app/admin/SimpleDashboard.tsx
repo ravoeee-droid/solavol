@@ -2,6 +2,7 @@
 import {useMemo,useState} from 'react';
 import './simple.css';
 import CommunicationCenter from './CommunicationCenter';
+import MetaAdStudio from './MetaAdStudio';
 
 type Screen='home'|'leads'|'messages'|'ads'|'google'|'website'|'settings';
 type Lead={id:number;name:string;city:string;project:string;source:string;stage:string;value:number};
@@ -86,6 +87,7 @@ export default function SimpleDashboard(){
       <Header mini="WERBUNG" title="Welche Werbung bringt Kunden?" desc="Meta und Google einfach vergleichen – ohne komplizierte Berichte." action={<button className="sx-outline" onClick={()=>go('settings')}>Werbekonten verbinden →</button>}/>
       <div className="sx-metrics three"><Metric label="Werbebudget" value="1.245 €" desc="Beispielmonat"/><Metric label="Anfragen über Werbung" value="22" desc="Meta + Google"/><Metric label="Ø Kosten / Anfrage" value="56,59 €" desc="Beispielwert"/></div>
       <div className="sx-two">{channels.map(ch=><Card key={ch.name} title={ch.name} sub={ch.description} action={<span className="sx-network-icon" style={{background:ch.color}}>{ch.logo}</span>}><div className="sx-adbig"><div><span>Neue Anfragen</span><strong>{ch.leads}</strong></div><div><span>Kosten pro Anfrage</span><strong>{(ch.cost/ch.leads).toLocaleString('de-DE',{style:'currency',currency:'EUR'})}</strong></div></div><div className="sx-adfooter"><span>Werbeausgaben</span><b>{format(ch.cost)}</b></div></Card>)}</div>
+      <Card title="Meta Ads – Werbemotive" sub="7 Instagram-Anzeigen · alle Interessenten-Stadien"><MetaAdStudio /></Card>
       <Card title="Was wir daraus lernen" sub="Einfach erklärt"><p className="sx-shortcopy">Im Demo-Beispiel liefert Meta mehr Anfragen zu niedrigeren Kosten. Ob daraus auch mehr Aufträge entstehen, sehen wir erst, wenn wir die Leads mit dem CRM verbinden.</p><button className="sx-primary" onClick={()=>go('leads')}>Anfragen im CRM ansehen →</button></Card>
      </>}
      {screen==='google'&&<>
