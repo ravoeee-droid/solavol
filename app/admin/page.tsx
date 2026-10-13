@@ -6,12 +6,12 @@ type Section='overview'|'leads'|'ads'|'business'|'reviews'|'website'|'blog'|'int
 type Lead={id:number;name:string;location:string;interest:string;source:string;value:number;status:string;next:string};
 const eur=(n:number)=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
 const initialLeads:Lead[]=[
-{id:1,name:'Max Beispiel',location:'Stuttgart',interest:'PV + Batteriespeicher',source:'Meta Ads',value:19500,status:'Neu',next:'Heute · Erstanruf'},
-{id:2,name:'Julia Mustermann',location:'Esslingen',interest:'Photovoltaik 12 kWp',source:'Google Ads',value:22000,status:'Kontaktiert',next:'Morgen · Termin abstimmen'},
-{id:3,name:'Thomas Demo',location:'Tübingen',interest:'Speicher nachrüsten',source:'Website',value:7900,status:'Termin',next:'15. Okt. · Vor-Ort-Termin'},
-{id:4,name:'Sophie Beispiel',location:'Reutlingen',interest:'PV-Komplettpaket',source:'Google Profil',value:24500,status:'Angebot',next:'16. Okt. · Nachfassen'},
-{id:5,name:'Daniel Muster',location:'Ulm',interest:'PV + Wallbox',source:'Meta Ads',value:17300,status:'Gewonnen',next:'Projektstart planen'},
-{id:6,name:'Familie Weber (Demo)',location:'Göppingen',interest:'PV + Speicher',source:'Website',value:20500,status:'Kontaktiert',next:'Heute · Rückruf'}
+{id:1,name:'Max Beispiel',location:'Offenburg',interest:'PV + Batteriespeicher',source:'Meta Ads',value:19500,status:'Neu',next:'Heute · Erstanruf'},
+{id:2,name:'Julia Mustermann',location:'Ortenberg',interest:'Photovoltaik 12 kWp',source:'Google Ads',value:22000,status:'Kontaktiert',next:'Morgen · Termin abstimmen'},
+{id:3,name:'Thomas Demo',location:'Lahr',interest:'Speicher nachrüsten',source:'Website',value:7900,status:'Termin',next:'15. Okt. · Vor-Ort-Termin'},
+{id:4,name:'Sophie Beispiel',location:'Kehl',interest:'PV-Komplettpaket',source:'Google Profil',value:24500,status:'Angebot',next:'16. Okt. · Nachfassen'},
+{id:5,name:'Daniel Muster',location:'Achern',interest:'PV + Wallbox',source:'Meta Ads',value:17300,status:'Gewonnen',next:'Projektstart planen'},
+{id:6,name:'Familie Weber (Demo)',location:'Gengenbach',interest:'PV + Speicher',source:'Website',value:20500,status:'Kontaktiert',next:'Heute · Rückruf'}
 ];
 const stages=['Neu','Kontaktiert','Termin','Angebot','Gewonnen'];
 const nav:{key:Section;name:string;icon:string;group:string}[]=[
@@ -46,7 +46,7 @@ export default function SolavolAdmin(){
  const [requestName,setRequestName]=useState('');
  const [reply,setReply]=useState('');
  const [blogTopic,setBlogTopic]=useState(ideas[0]);
- const [blogCity,setBlogCity]=useState('Stuttgart');
+ const [blogCity,setBlogCity]=useState('Offenburg');
  const [blogDraft,setBlogDraft]=useState('');
  const [savedDrafts,setSavedDrafts]=useState<string[]>([]);
  const [guide,setGuide]=useState('');
@@ -123,7 +123,7 @@ export default function SolavolAdmin(){
        {view==='business'&&<>
          <SectionTitle eyebrow="LOCAL VISIBILITY" title="Dein Google-Unternehmensprofil." description="Lokale Auffindbarkeit, Unternehmensupdates und Bewertungen zentral im Blick." action={<button className="sv-btn secondary" onClick={()=>setView('integrations')}>Google-Profil anbinden ↗</button>}/>
          <div className="sv-grid-two"><Panel title="Google-Präsenz" sub="Darstellung für einen angebundenen Standort"><div className="sv-google-card"><div className="sv-google-cover"><div>☀</div></div><div className="sv-google-body"><span className="sv-overline">GOOGLE BUSINESS PROFILE · VORSCHAU</span><h3>SOLAVOL</h3><p>Photovoltaik · Solartechnik · Energiesysteme</p><div className="sv-google-rating"><span>★★★★★</span> <b>Bewertungen erscheinen nach Verbindung</b></div><div className="sv-g-buttons"><span>⌖ Route</span><span>☎ Anrufen</span><span>↗ Website</span></div></div></div></Panel><Panel title="Lokale Profil-Checkliste" sub="Was für mehr Sichtbarkeit gepflegt werden sollte"><div className="sv-checklist">{['Kategorie und Leistungsgebiete prüfen','Leistungen und Produkte vollständig anlegen','Neue Projektfotos regelmäßig veröffentlichen','Fragen & Antworten aktuell halten','Google-Beiträge zu Projekten planen','Bewertungen kontinuierlich beantworten'].map((t,i)=><div key={t}><span className={i<2?'done':''}>{i<2?'✓':i+1}</span><p>{t}</p><Chip tone={i<2?'good':'neutral'}>{i<2?'Demo: erledigt':'Offen'}</Chip></div>)}</div></Panel></div>
-         <Panel title="Google-Beitragsplaner" sub="Beiträge vorbereiten. Veröffentlichung erst nach Profilfreigabe." extra={<Chip tone="warm">Ohne Live-Veröffentlichung</Chip>}><div className="sv-post-compose"><input value={newPost} onChange={e=>setNewPost(e.target.value)} placeholder="Beitragstitel eingeben, z. B. PV-Projekt in Stuttgart"/><button className="sv-btn" onClick={()=>{if(newPost.trim()){setPosts(p=>[{title:newPost.trim(),date:'Gerade erstellt',status:'Entwurf'},...p]);setNewPost('');announce('Google-Beitrag als lokaler Demo-Entwurf hinzugefügt.')}}}>＋ Beitrag entwerfen</button></div><div className="sv-posts">{posts.map((p,i)=><div key={i}><div className="sv-post-icon">▧</div><div><b>{p.title}</b><small>{p.date}</small></div><Chip tone={p.status==='Geplant'?'blue':'neutral'}>{p.status}</Chip></div>)}</div></Panel>
+         <Panel title="Google-Beitragsplaner" sub="Beiträge vorbereiten. Veröffentlichung erst nach Profilfreigabe." extra={<Chip tone="warm">Ohne Live-Veröffentlichung</Chip>}><div className="sv-post-compose"><input value={newPost} onChange={e=>setNewPost(e.target.value)} placeholder="Beitragstitel eingeben, z. B. PV-Projekt in der Ortenau"/><button className="sv-btn" onClick={()=>{if(newPost.trim()){setPosts(p=>[{title:newPost.trim(),date:'Gerade erstellt',status:'Entwurf'},...p]);setNewPost('');announce('Google-Beitrag als lokaler Demo-Entwurf hinzugefügt.')}}}>＋ Beitrag entwerfen</button></div><div className="sv-posts">{posts.map((p,i)=><div key={i}><div className="sv-post-icon">▧</div><div><b>{p.title}</b><small>{p.date}</small></div><Chip tone={p.status==='Geplant'?'blue':'neutral'}>{p.status}</Chip></div>)}</div></Panel>
        </>}
        {view==='reviews'&&<>
          <SectionTitle eyebrow="REPUTATION ENGINE" title="Mehr echte Google-Bewertungen." description="Zufriedene Kunden nach Projektabschluss um eine ehrliche Bewertung bitten – mit transparentem Follow-up." action={<button className="sv-btn secondary" onClick={()=>setView('integrations')}>Bewertungsquelle verbinden ↗</button>}/>
