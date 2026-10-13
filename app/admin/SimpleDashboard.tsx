@@ -1,8 +1,9 @@
 'use client';
 import {useMemo,useState} from 'react';
 import './simple.css';
+import CommunicationCenter from './CommunicationCenter';
 
-type Screen='home'|'leads'|'ads'|'google'|'website'|'settings';
+type Screen='home'|'leads'|'messages'|'ads'|'google'|'website'|'settings';
 type Lead={id:number;name:string;city:string;project:string;source:string;stage:string;value:number};
 const stages=['Neu','Kontaktiert','Termin','Angebot','Gewonnen'];
 const startLeads:Lead[]=[
@@ -15,7 +16,7 @@ const startLeads:Lead[]=[
 ];
 const channels=[{name:'Meta Ads',logo:'m',cost:698,leads:17,description:'Anfragen von Hausbesitzern',color:'#2467c7'},{name:'Google Ads',logo:'G',cost:547,leads:5,description:'Aktive Nachfrage über Google',color:'#ea9c21'}];
 const format=(v:number)=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v);
-const menu:{key:Screen;label:string;icon:string}[]=[{key:'home',label:'Übersicht',icon:'▦'},{key:'leads',label:'Anfragen & CRM',icon:'◎'},{key:'ads',label:'Werbung',icon:'↗'},{key:'google',label:'Google & Bewertungen',icon:'☆'},{key:'website',label:'Website & Blog',icon:'▣'}];
+const menu:{key:Screen;label:string;icon:string}[]=[{key:'home',label:'Übersicht',icon:'▦'},{key:'leads',label:'Anfragen & CRM',icon:'◎'},{key:'messages',label:'Nachrichten & Follow-ups',icon:'✉'},{key:'ads',label:'Werbung',icon:'↗'},{key:'google',label:'Google & Bewertungen',icon:'☆'},{key:'website',label:'Website & Blog',icon:'▣'}];
 const defaultReviews=[{name:'Demokunde nach Installation',status:'Vorbereitet'},{name:'Musterprojekt',status:'Vorbereitet'}];
 function Pill({children,color='gray'}:{children:React.ReactNode;color?:'gray'|'green'|'yellow'}){return <span className={'sx-pill '+color}>{children}</span>}
 function Metric({label,value,desc}:{label:string;value:string;desc:string}){return <div className="sx-metric"><span>{label}</span><strong>{value}</strong><small>{desc}</small></div>}
@@ -65,13 +66,14 @@ export default function SimpleDashboard(){
       <div className="sx-two">
        <Card title="Heute wichtig" sub="Drei Dinge, die jetzt Umsatz bringen"><div className="sx-actions">
         <button onClick={()=>go('leads')}><span className="sx-action-icon">◎</span><div><b>Neue Anfragen kontaktieren</b><small>Interessenten im CRM bearbeiten</small></div><strong>→</strong></button>
-        <button onClick={()=>go('google','reviews')}><span className="sx-action-icon">☆</span><div><b>Google-Bewertungen anfragen</b><small>Bewertungsnachricht vorbereiten</small></div><strong>→</strong></button>
+        <button onClick={()=>go('messages')}><span className="sx-action-icon">✉</span><div><b>Nachrichten & Follow-ups prüfen</b><small>Offene Antworten und Wiedervorlagen</small></div><strong>→</strong></button>
         <button onClick={()=>go('website','blog')}><span className="sx-action-icon">✦</span><div><b>Neuen Blogbeitrag erstellen</b><small>In wenigen Klicks einen SEO-Entwurf schreiben</small></div><strong>→</strong></button>
        </div></Card>
        <Card title="Letzte Anfragen" sub="Beispielkontakte aus dem CRM" action={<button className="sx-link" onClick={()=>go('leads')}>Alle ansehen →</button>}><div className="sx-recent">{leads.slice(0,4).map(l=><div key={l.id}><span className="sx-avatar">{l.name.slice(0,1)}</span><div><b>{l.name}</b><small>{l.project} · {l.city}</small></div><Pill color={l.stage==='Neu'?'yellow':l.stage==='Gewonnen'?'green':'gray'}>{l.stage}</Pill></div>)}</div></Card>
       </div>
       <div className="sx-footnote">Alle Kennzahlen und Kontakte sind zurzeit Beispieldaten für den Termin. Live-Daten folgen nach der Kontoanbindung.</div>
     </>}
+    {screen==='messages'&&<CommunicationCenter leadNames={leads.map(l=>l.name)} onGoLeads={()=>go('leads')}/>}
     {screen==='leads'&&<>
       <Header mini="KUNDENANFRAGEN" title="Keinen Interessenten verlieren." desc="Alle PV-Anfragen von der ersten Nachricht bis zum Auftrag." action={<button className="sx-primary" onClick={()=>setAdding(v=>!v)}>{adding?'Schließen':'+ Anfrage hinzufügen'}</button>}/>
       <div className="sx-metrics three"><Metric label="Kontakte im Demo-CRM" value={String(leads.length)} desc="gespeicherte Beispieldaten"/><Metric label="Offene Angebote" value={String(leads.filter(l=>l.stage==='Angebot').length)} desc="im CRM"/><Metric label="Gewonnene Kunden" value={String(leads.filter(l=>l.stage==='Gewonnen').length)} desc="Beispielabschlüsse"/></div>
@@ -108,7 +110,7 @@ export default function SimpleDashboard(){
      </>}
      {screen==='settings'&&<>
        <Header mini="EINRICHTUNG" title="Konten verbinden." desc="Sobald die Zugänge freigegeben sind, fließen echte Daten in das Cockpit."/>
-       <div className="sx-connections">{[{name:'Meta Ads',short:'Werbekampagnen und Leads'},{name:'Google Ads',short:'Suchkampagnen und Anfragen'},{name:'Google Unternehmensprofil',short:'Profil, Beiträge und Bewertungen'},{name:'Website & Analytics',short:'Besucher und Formulare'}].map(x=><div key={x.name}><div><b>{x.name}</b><small>{x.short}</small></div><Pill color="yellow">Nicht verbunden</Pill><button onClick={()=>setConnectGuide(connectGuide===x.name?'':x.name)}>{connectGuide===x.name?'Weniger':'So geht’s'} <span>↗</span></button>{connectGuide===x.name&&<p>Der Kontoinhaber autorisiert SOLAVOL über die sichere Anmeldung beim jeweiligen Dienst. Danach richten wir die passende Schnittstelle und Berechtigungen ein.</p>}</div>)}</div>
+       <div className="sx-connections">{[{name:'Meta Ads',short:'Werbekampagnen und Leads'},{name:'Google Ads',short:'Suchkampagnen und Anfragen'},{name:'Google Unternehmensprofil',short:'Profil, Beiträge und Bewertungen'},{name:'Website & Analytics',short:'Besucher und Formulare'},{name:'E-Mail-Postfach',short:'E-Mail-Eingang und sicherer Nachrichtenversand'},{name:'WhatsApp Business',short:'Kundennachrichten und Freigaben'}].map(x=><div key={x.name}><div><b>{x.name}</b><small>{x.short}</small></div><Pill color="yellow">Nicht verbunden</Pill><button onClick={()=>setConnectGuide(connectGuide===x.name?'':x.name)}>{connectGuide===x.name?'Weniger':'So geht’s'} <span>↗</span></button>{connectGuide===x.name&&<p>Der Kontoinhaber autorisiert SOLAVOL über die sichere Anmeldung beim jeweiligen Dienst. Danach richten wir die passende Schnittstelle und Berechtigungen ein.</p>}</div>)}</div>
        <div className="sx-footnote">Die Demo sendet keine Nachrichten, schaltet keine Anzeigen und veröffentlicht keine Beiträge.</div>
      </>}
      <footer className="sx-footer"><span>SOLAVOL Growth Cockpit · von Digitale Gewinner</span><span>Präsentationsdemo · Beispielwerte · kein Livezugriff</span></footer>
